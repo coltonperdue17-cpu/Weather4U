@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Weather4U</title>
+
+<style>
+
+body{
+margin:0;
+background:#1a1a1a;
+font-family:Arial, sans-serif;
+color:white;
+}
+
+/* HEADER */
+
+.topbar{
+background:linear-gradient(#0033cc,#001f66);
+padding:15px;
+border-bottom:4px solid #000;
+}
+
+.logo{
+font-size:42px;
+font-weight:bold;
+letter-spacing:2px;
+}
+
+.subtitle{
+font-size:14px;
+margin-top:5px;
+}
+
+/* ALERT BAR */
+
+.alertbar{
+background:#ffcc00;
+color:black;
+padding:8px;
+font-weight:bold;
+border-bottom:2px solid #000;
+}
+
+/* LAYOUT */
+
+.container{
+display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:240px;
+background:#d6d6d6;
+min-height:100vh;
+border-right:4px solid #666;
+}
+
+.navtitle{
+background:#003399;
+color:white;
+padding:10px;
+font-size:20px;
+font-weight:bold;
+border-bottom:2px solid #000;
+}
+
+.navitem{
+display:block;
+padding:12px;
+color:black;
+text-decoration:none;
+font-weight:bold;
+border-bottom:1px solid #999;
+background:#efefef;
+}
+
+.navitem:hover{
+background:#cfdcff;
+}
+
+/* MAIN */
+
+.main{
+flex:1;
+padding:20px;
+}
+
+/* SEARCH */
+
+.searchbox{
+background:#dcdcdc;
+padding:15px;
+border:3px solid #555;
+margin-bottom:20px;
+}
+
+.searchbox input{
+width:300px;
+padding:8px;
+font-size:18px;
+}
+
+.searchbox button{
+padding:8px 14px;
+font-size:18px;
+background:#003399;
+color:white;
+border:2px solid black;
+cursor:pointer;
+font-weight:bold;
+}
+
+/* WEATHER CHANNEL STYLE BOX */
+
+.twcbox{
+background:linear-gradient(#003cff,#00145a);
+padding:20px;
+border:5px solid #777;
+box-shadow:0 0 25px black inset;
+width:900px;
+}
+
+.twcheader{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.twclogo{
+background:#111;
+padding:10px;
+border:2px solid #888;
+font-size:18px;
+font-weight:bold;
+}
+
+.twctitle{
+font-size:44px;
+font-weight:bold;
+letter-spacing:2px;
+}
+
+.twctime{
+font-size:22px;
+font-weight:bold;
+}
+
+.regionname{
+font-size:38px;
+font-weight:bold;
+text-align:center;
+margin-bottom:20px;
+}
+
+.forecastgrid{
+display:flex;
+justify-content:space-around;
+text-align:center;
+}
+
+.forecastcard{
+width:250px;
+}
+
+.forecastcard img{
+width:100px;
+height:100px;
+}
+
+.dayname{
+font-size:36px;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.conditiontext{
+font-size:24px;
+font-weight:bold;
+margin-top:10px;
+min-height:60px;
+}
+
+.lowhigh{
+font-size:28px;
+font-weight:bold;
+margin-top:10px;
+}
+
+.bottomstats{
+margin-top:25px;
+padding-top:15px;
+border-top:2px solid rgba(255,255,255,0.3);
+display:flex;
+justify-content:space-around;
+font-size:20px;
+font-weight:bold;
+}
+
+/* OTHER PAGES */
+
+.pagebox{
+background:#003399;
+padding:20px;
+border:4px solid #777;
+width:900px;
+}
+
+.pagetitle{
+font-size:36px;
+font-weight:bold;
+margin-bottom:20px;
+}
+
+.footer{
+background:#001f66;
+padding:12px;
+text-align:center;
+font-size:14px;
+margin-top:40px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topbar">
+
+<div class="logo">
+WEATHER4U
+</div>
+
+<div class="subtitle">
+Local Forecasts | Radar | Alerts | Satellite
+</div>
+
+</div>
+
+<div class="alertbar">
+⚠ LIVE WEATHER INFORMATION CENTER
+</div>
+
+<div class="container">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="navtitle">
+Navigation
+</div>
+
+<a href="#" class="navitem" onclick="showPage('home')">
+Current Conditions
+</a>
+
+<a href="#" class="navitem" onclick="showPage('radar')">
+Radar
+</a>
+
+<a href="#" class="navitem" onclick="showPage('satellite')">
+Satellite
+</a>
+
+<a href="#" class="navitem" onclick="showPage('alerts')">
+Warnings
+</a>
+
+<a href="#" class="navitem" onclick="showPage('hurricane')">
+Hurricane Center
+</a>
+
+<a href="#" class="navitem" onclick="showPage('maps')">
+Regional Maps
+</a>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<!-- HOME -->
+
+<div id="homePage">
+
+<div class="searchbox">
+
+<input
+type="text"
+id="cityInput"
+placeholder="Enter city or ZIP code">
+
+<button onclick="getWeather()">
+Get Weather
+</button>
+
+</div>
+
+<div class="twcbox">
+
+<div class="twcheader">
+
+<div class="twclogo">
+WEATHER4U
+</div>
+
+<div class="twctitle">
+EXTENDED FORECAST
+</div>
+
+<div class="twctime" id="clock">
+4:20 PM
+</div>
+
+</div>
+
+<div class="regionname" id="regionName">
+Your Area
+</div>
+
+<div class="forecastgrid" id="forecastGrid">
+
+<div class="forecastcard">
+
+<div class="dayname">
+FRI
+</div>
+
+<img src="https://cdn.weatherapi.com/weather/64x64/day/116.png">
+
+<div class="conditiontext">
+Partly Cloudy
+</div>
+
+<div class="lowhigh">
+LO 47° | HI 67°
+</div>
+
+</div>
+
+</div>
+
+<div class="bottomstats">
+
+<div>
+VISIBILITY:
+<span id="visibility">
+10 mi
+</span>
+</div>
+
+<div>
+HUMIDITY:
+<span id="humidity">
+50%
+</span>
+</div>
+
+<div>
+WIND:
+<span id="wind">
+5 mph
+</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- RADAR -->
+
+<div id="radarPage" style="display:none;">
+
+<div class="pagebox">
+
+<div class="pagetitle">
+National Radar
+</div>
+
+<img
+src="https://radar.weather.gov/ridge/standard/CONUS_loop.gif"
+width="100%">
+
+</div>
+
+</div>
+
+<!-- SATELLITE -->
+
+<div id="satellitePage" style="display:none;">
+
+<div class="pagebox">
+
+<div class="pagetitle">
+GOES Satellite
+</div>
+
+<img
+src="https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/1250x750.jpg"
+width="100%">
+
+</div>
+
+</div>
+
+<!-- ALERTS -->
+
+<div id="alertsPage" style="display:none;">
+
+<div class="pagebox">
+
+<div class="pagetitle">
+National Weather Alerts
+</div>
+
+<h2>
+⚠ No Major Alerts
+</h2>
+
+<p>
+Monitor local forecasts for updates.
+</p>
+
+</div>
+
+</div>
+
+<!-- HURRICANE -->
+
+<div id="hurricanePage" style="display:none;">
+
+<div class="pagebox">
+
+<div class="pagetitle">
+Atlantic Hurricane Outlook
+</div>
+
+<img
+src="https://www.nhc.noaa.gov/xgtwo/two_atl_7d0.png"
+width="100%">
+
+</div>
+
+</div>
+
+<!-- MAPS -->
+
+<div id="mapsPage" style="display:none;">
+
+<div class="pagebox">
+
+<div class="pagetitle">
+Regional Forecast Maps
+</div>
+
+<img
+src="https://www.wpc.ncep.noaa.gov/basicwx/92fndfd.gif"
+width="100%">
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+Weather4U © 2026
+</div>
+
+<script>
+
+const apiKey =
+"bc0720ae02b94046846203940262905";
+
+/* PAGE SWITCHER */
+
+function showPage(page){
+
+document.getElementById("homePage").style.display =
+"none";
+
+document.getElementById("radarPage").style.display =
+"none";
+
+document.getElementById("satellitePage").style.display =
+"none";
+
+document.getElementById("alertsPage").style.display =
+"none";
+
+document.getElementById("hurricanePage").style.display =
+"none";
+
+document.getElementById("mapsPage").style.display =
+"none";
+
+if(page === "home"){
+document.getElementById("homePage").style.display =
+"block";
+}
+
+if(page === "radar"){
+document.getElementById("radarPage").style.display =
+"block";
+}
+
+if(page === "satellite"){
+document.getElementById("satellitePage").style.display =
+"block";
+}
+
+if(page === "alerts"){
+document.getElementById("alertsPage").style.display =
+"block";
+}
+
+if(page === "hurricane"){
+document.getElementById("hurricanePage").style.display =
+"block";
+}
+
+if(page === "maps"){
+document.getElementById("mapsPage").style.display =
+"block";
+}
+
+}
+
+/* CLOCK */
+
+function updateClock(){
+
+const now = new Date();
+
+document.getElementById("clock").innerHTML =
+now.toLocaleTimeString(
+'en-US',
+{
+hour:'numeric',
+minute:'2-digit'
+}
+);
+
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+/* WEATHER */
+
+async function getWeather(){
+
+const city =
+document.getElementById("cityInput").value;
+
+try{
+
+const response =
+await fetch(
+`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=3`
+);
+
+const data =
+await response.json();
+
+if(data.error){
+
+alert("City not found.");
+return;
+
+}
+
+document.getElementById("regionName").innerHTML =
+data.location.name + ", " +
+data.location.region;
+
+document.getElementById("visibility").innerHTML =
+data.current.vis_miles + " mi";
+
+document.getElementById("humidity").innerHTML =
+data.current.humidity + "%";
+
+document.getElementById("wind").innerHTML =
+data.current.wind_mph + " mph";
+
+let html = "";
+
+data.forecast.forecastday.forEach(day => {
+
+let date = new Date(day.date);
+
+let weekday =
+date.toLocaleDateString(
+'en-US',
+{
+weekday:'short'
+}
+).toUpperCase();
+
+html += `
+
+<div class="forecastcard">
+
+<div class="dayname">
+${weekday}
+</div>
+
+<img src="https:${day.day.condition.icon}">
+
+<div class="conditiontext">
+${day.day.condition.text}
+</div>
+
+<div class="lowhigh">
+LO ${Math.round(day.day.mintemp_f)}°
+|
+HI ${Math.round(day.day.maxtemp_f)}°
+</div>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("forecastGrid").innerHTML =
+html;
+
+}
+
+catch(error){
+
+alert("Error loading weather.");
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>
